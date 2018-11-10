@@ -16,7 +16,7 @@
     </properties>
 
     <modules>
-        <module>../myBits-study</module>
+       <!--<module>../servlet</module>-->
     </modules>
 
     <dependencyManagement>

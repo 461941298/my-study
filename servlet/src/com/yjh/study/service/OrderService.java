@@ -7,7 +7,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-@WebServlet("/order")
+@WebServlet(value = "/order", asyncSupported = true)
 public class OrderService extends HttpServlet {
 
     @Override

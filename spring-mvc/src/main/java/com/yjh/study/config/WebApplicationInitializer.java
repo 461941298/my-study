@@ -1,6 +1,5 @@
 package com.yjh.study.config;
 
-import com.sun.xml.internal.ws.server.AbstractWebServiceContext;
 import org.springframework.web.servlet.support.AbstractAnnotationConfigDispatcherServletInitializer;
 
 /**
