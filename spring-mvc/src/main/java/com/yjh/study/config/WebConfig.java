@@ -3,6 +3,7 @@ package com.yjh.study.config;
 import com.yjh.study.interceptor.WebInterceptor;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.FilterType;
+import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.context.request.WebRequestInterceptor;
 import org.springframework.web.servlet.DispatcherServlet;
@@ -13,6 +14,7 @@ import org.springframework.web.servlet.config.annotation.*;
  * @discrption
  */
 @EnableWebMvc
+@EnableAsync
 @ComponentScan(
         basePackages = "com.yjh.study",
         includeFilters = {
