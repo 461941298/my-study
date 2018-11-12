@@ -19,7 +19,7 @@ import java.io.IOException;
 public class UserController {
 
     @Qualifer("UserService")
-    private UserService userService;
+    public UserService userService;
 
     @RequestMapping("/info")
     public void getInfo(HttpServletRequest request, HttpServletResponse response,
@@ -27,6 +27,5 @@ public class UserController {
         String result = userService.getInfo(name, age);
         response.getWriter().write(result);
     }
-
 
 }

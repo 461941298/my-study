@@ -1,7 +1,7 @@
 项目目标：手动实现一个简单的spring mvc
 主要功能：
     1. 通过web.xml配置启动项目
-    2. 通过io加载必要的类信息
+    2. 通过io文件操作找到所有能加载的类
     3. 实现简单的IOC功能
     4. 实现简单的依赖注入
     5. 实现url与方法映射分配
@@ -15,5 +15,19 @@
         3. 设置第一个启动
        通过这一步，逻辑就进入了DispatcherServlet的init方法。
 
-    2. 加载必要类的信息
-        即：扫瞄指定包，并加载标注了@Component的Bean
+    2. 加载所有类信息
+        即：扫瞄指定包，通过io 和 字符串操作将可以加载的类的全路径加载到list-->classNames
+
+    3. IOC
+        遍历list-->classNames,通过@Component判断是否要将class实例化并加载到Map<String, Object> beans
+
+    4. DI
+        遍历Map<String, Object> beans，通过@Qualifer判断是加要做依赖注入处理
+
+    5. url与方法匹配
+        遍历Map<String, Object> beans，取所有Bean
+            遍历Bean的方法，组装url（从类到方法），把组装好的url和MyMethod放入Map<String, MyMethod> handlerMapping
+            (MyMethod 封装了 bean对象 和 Method 方便后续的使用)
+
+    6. 参数解析
+        主要使用了策略模式，每一种参数都有自己的处理类
