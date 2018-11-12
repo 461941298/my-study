@@ -1,0 +1,12 @@
+项目目标：快速熟悉并使用mybatis
+
+一、环境搭建
+    1. 引入jar包：mybatis，mysql驱动，log
+    2. 编写mybatis配置
+二、代码编写
+    问题：
+        1. mapper xml文件与java 接口不能绑定
+            1. 检查mapper的namespace是不能指向接口
+            2. 检查方法的签名是否一致
+            3. maven项目编译时默认不编译包下的xml文件，解决方法在pom的build中
+三、测试
