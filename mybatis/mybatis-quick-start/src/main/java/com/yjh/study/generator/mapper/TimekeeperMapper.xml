@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yjh.study.generator.mapper.TimekeeperMapper">
+  <resultMap id="BaseResultMap" type="com.yjh.study.generator.domain.Timekeeper">
+    <id column="Timekeeper_Id" jdbcType="VARCHAR" property="timekeeperId" />
+    <result column="Date_Time" jdbcType="TIMESTAMP" property="dateTime" />
+    <result column="In_Out" jdbcType="CHAR" property="inOut" />
+    <result column="EMP_ID" jdbcType="BIGINT" property="empId" />
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from TIMEKEEPER
+    where Timekeeper_Id = #{timekeeperId,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.yjh.study.generator.domain.Timekeeper">
+    insert into TIMEKEEPER (Timekeeper_Id, Date_Time, In_Out, 
+      EMP_ID)
+    values (#{timekeeperId,jdbcType=VARCHAR}, #{dateTime,jdbcType=TIMESTAMP}, #{inOut,jdbcType=CHAR}, 
+      #{empId,jdbcType=BIGINT})
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="com.yjh.study.generator.domain.Timekeeper">
+    update TIMEKEEPER
+    set Date_Time = #{dateTime,jdbcType=TIMESTAMP},
+      In_Out = #{inOut,jdbcType=CHAR},
+      EMP_ID = #{empId,jdbcType=BIGINT}
+    where Timekeeper_Id = #{timekeeperId,jdbcType=VARCHAR}
+  </update>
+  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select Timekeeper_Id, Date_Time, In_Out, EMP_ID
+    from TIMEKEEPER
+    where Timekeeper_Id = #{timekeeperId,jdbcType=VARCHAR}
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap">
+    select Timekeeper_Id, Date_Time, In_Out, EMP_ID
+    from TIMEKEEPER
+  </select>
+</mapper>

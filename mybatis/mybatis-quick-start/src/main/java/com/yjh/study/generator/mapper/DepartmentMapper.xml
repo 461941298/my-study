@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yjh.study.generator.mapper.DepartmentMapper">
+  <resultMap id="BaseResultMap" type="com.yjh.study.generator.domain.Department">
+    <id column="DEPT_ID" jdbcType="INTEGER" property="deptId" />
+    <result column="DEPT_NAME" jdbcType="VARCHAR" property="deptName" />
+    <result column="DEPT_NO" jdbcType="VARCHAR" property="deptNo" />
+    <result column="LOCATION" jdbcType="VARCHAR" property="location" />
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from DEPARTMENT
+    where DEPT_ID = #{deptId,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.yjh.study.generator.domain.Department">
+    insert into DEPARTMENT (DEPT_ID, DEPT_NAME, DEPT_NO, 
+      LOCATION)
+    values (#{deptId,jdbcType=INTEGER}, #{deptName,jdbcType=VARCHAR}, #{deptNo,jdbcType=VARCHAR}, 
+      #{location,jdbcType=VARCHAR})
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="com.yjh.study.generator.domain.Department">
+    update DEPARTMENT
+    set DEPT_NAME = #{deptName,jdbcType=VARCHAR},
+      DEPT_NO = #{deptNo,jdbcType=VARCHAR},
+      LOCATION = #{location,jdbcType=VARCHAR}
+    where DEPT_ID = #{deptId,jdbcType=INTEGER}
+  </update>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select DEPT_ID, DEPT_NAME, DEPT_NO, LOCATION
+    from DEPARTMENT
+    where DEPT_ID = #{deptId,jdbcType=INTEGER}
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap">
+    select DEPT_ID, DEPT_NAME, DEPT_NO, LOCATION
+    from DEPARTMENT
+  </select>
+</mapper>

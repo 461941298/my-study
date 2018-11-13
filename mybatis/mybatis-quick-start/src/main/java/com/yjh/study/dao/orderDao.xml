@@ -11,7 +11,120 @@
       where o.id = #{id}
     </select>
 
-    <update id="updateMoney" parameterType="java.lang.Double">
-        UPDATE `order` SET `money`=#{money} WHERE (`id`='7')
+    <resultMap id="orderViewMap" type="com.yjh.study.view.OrderView">
+        <result property="orderId" column="orderId"/>
+        <result property="orderPrice" column="money"/>
+        <result property="createdTime" column="createdTime"/>
+        <result property="orderStatus" column="status"/>
+    </resultMap>
+
+    <sql id="selectOrderView">
+        select
+          o.id orderId,
+          o.time createdTime,
+          o.money money,
+          o.status status
+        from `order` o
+    </sql>
+
+    <select id="getAll" resultMap="orderViewMap">
+        <include refid="selectOrderView"></include>
+    </select>
+
+    <insert id="insert" keyProperty="id" useGeneratedKeys="true">
+        INSERT INTO
+        `order` (`time`, `money`, `status`)
+        VALUES (#{time}, #{money}, #{status});
+    </insert>
+
+    <update id="updateMoney">
+        UPDATE `order` SET `money`=#{money} WHERE (`id`= #{id})
     </update>
+
+    <select id="selectIf" resultMap="orderViewMap">
+        <include refid="selectOrderView"></include>
+        where
+        <if test="money != null">
+            o.money = #{money} and
+        </if>
+        <if test="status != null">
+            o.status = #{status}
+        </if>
+    </select>
+
+    <select id="selectIfAndWhere" resultMap="orderViewMap">
+        <include refid="selectOrderView"></include>
+        <where>
+            <if test="money != null">
+                and o.money = #{money}
+            </if>
+            <if test="status != null">
+                and o.status = #{status}
+            </if>
+        </where>
+    </select>
+
+    <update id="updateIfAndSet">
+        update `order`
+        <set>
+            <if test="money != null">
+                money = #{money},
+            </if>
+            <if test="time != null">
+                time = #{time},
+            </if>
+            <if test="status">
+                status = #{status},
+            </if>
+        </set>
+        where id = #{id}
+    </update>
+
+    <insert id="insertAndTrim">
+        insert `order`
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="money != null">
+                money,
+            </if>
+            <if test="time != null">
+                time,
+            </if>
+            <if test="status != null">
+                status,
+            </if>
+
+        </trim>
+        <trim prefix="values(" suffix=")" suffixOverrides=",">
+            <if test="money != null">
+                #{money},
+            </if>
+            <if test="time != null">
+                #{time},
+            </if>
+            <if test="status != null">
+                #{status},
+            </if>
+        </trim>
+    </insert>
+
+    <select id="getByMoneyForeach" resultMap="orderViewMap">
+        <include refid="selectOrderView"></include>
+        where o.money in
+        <foreach collection="array" open="(" close=")" item="money" index="i" separator=",">
+            #{money}
+        </foreach>
+    </select>
+
+    <insert id="insertByBatch">
+        INSERT INTO
+        `order` (`time`, `money`, `status`)
+        VALUES
+        <foreach collection="list"  separator="," index="i" item="order">
+            (
+            #{order.time},
+            #{order.money},
+            #{order.status}
+            )
+        </foreach>
+    </insert>
 </mapper>
