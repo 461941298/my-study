@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yjh.study.dao.PhoneDao">
+
+    <resultMap id="PhoneBaseMap" type="com.yjh.study.entity.Phone">
+        <result property="number" column="number"/>
+    </resultMap>
+
+    <select id="findByUserId" resultMap="PhoneBaseMap" parameterType="java.lang.Integer">
+        select
+          p.number number,
+          p.user_id
+        from phone p
+        where p.user_id = #{userId}
+    </select>
+</mapper>

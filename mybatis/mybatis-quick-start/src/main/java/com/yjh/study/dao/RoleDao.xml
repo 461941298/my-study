@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yjh.study.dao.RoleDao">
+
+    <resultMap id="RoleBaseMap" type="com.yjh.study.entity.Role">
+        <id property="id" column="id"/>
+        <result property="name" column="name"/>
+        <result property="value" column="value"/>
+    </resultMap>
+
+    <select id="findById" resultMap="RoleBaseMap" >
+        select
+          r.id,
+          r.name,
+          r.value
+        from role r
+        where r.id = #{id}
+    </select>
+</mapper>

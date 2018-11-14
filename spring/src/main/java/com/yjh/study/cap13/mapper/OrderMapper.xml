@@ -2,7 +2,7 @@
 <!DOCTYPE mapper
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.yjh.study.dao.OrderDao">
+<mapper namespace="com.yjh.study.cap13.mapper.OrderMapper">
 
     <!--开启命名空间的二级缓存-->
     <cache></cache>
@@ -11,14 +11,14 @@
     <!--<cache-ref namespace=""-->
 
 
-    <select id="getById" resultType="com.yjh.study.entity.Order" parameterType="java.lang.Integer">
+    <select id="getById" resultType="com.yjh.study.cap13.entity.Order" parameterType="java.lang.Integer">
       select
         o.id, o.time, o.money, o.status
       from `order` o
       where o.id = #{id}
     </select>
 
-    <resultMap id="orderViewMap" type="com.yjh.study.view.OrderView">
+    <resultMap id="orderViewMap" type="com.yjh.study.cap13.view.OrderView">
         <result property="orderId" column="orderId"/>
         <result property="orderPrice" column="money"/>
         <result property="createdTime" column="createdTime"/>

@@ -1,7 +1,7 @@
-package com.yjh.study.dao;
+package com.yjh.study.cap13.mapper;
 
-import com.yjh.study.entity.Order;
-import com.yjh.study.view.OrderView;
+import com.yjh.study.cap13.entity.Order;
+import com.yjh.study.cap13.view.OrderView;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
@@ -10,7 +10,7 @@ import java.util.List;
  * @author yjh
  * @discrption
  */
-public interface OrderDao {
+public interface OrderMapper {
 
     Order getById(Integer id);
 

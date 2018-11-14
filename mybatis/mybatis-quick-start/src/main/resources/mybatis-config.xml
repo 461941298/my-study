@@ -6,6 +6,10 @@
 
     <!--指定数据库配置文件-->
     <properties resource="db.properties"/>
+    
+    <settings>
+        <setting name="aggressiveLazyLoading" value="false"/>
+    </settings>
 
     <environments default="development">
         <environment id="development">
@@ -18,6 +22,8 @@
             </dataSource>
         </environment>
     </environments>
+
+
 
     <!--dao层映射指定-->
     <mappers>

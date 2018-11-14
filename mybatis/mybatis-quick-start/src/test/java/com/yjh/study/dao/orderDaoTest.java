@@ -1,6 +1,5 @@
 package com.yjh.study.dao;
 
-import com.sun.org.apache.xerces.internal.xni.parser.XMLPullParserConfiguration;
 import com.yjh.study.entity.Order;
 import com.yjh.study.view.OrderView;
 import org.apache.ibatis.io.Resources;
@@ -11,11 +10,8 @@ import org.apache.ibatis.session.SqlSessionFactoryBuilder;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.experimental.theories.suppliers.TestedOn;
 
 import java.io.InputStream;
-import java.sql.PreparedStatement;
-import java.sql.Statement;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -45,6 +41,7 @@ public class orderDaoTest {
         OrderDao orderDao = sqlSession.getMapper(OrderDao.class);
         Order order = orderDao.getById(7);
         System.out.println(order);
+        sqlSession.close();
     }
 
     @Test
@@ -53,6 +50,7 @@ public class orderDaoTest {
         OrderDao orderDao = sqlSession.getMapper(OrderDao.class);
         orderDao.updateMoney(1.4, 7);
         sqlSession.commit();
+        sqlSession.close();
     }
 
     @Test
@@ -68,6 +66,7 @@ public class orderDaoTest {
         System.out.println(order);
         sqlSession.commit();
         System.out.println(order);
+        sqlSession.close();
     }
 
     @Test
@@ -76,6 +75,7 @@ public class orderDaoTest {
         OrderDao orderDao = sqlSession.getMapper(OrderDao.class);
         List<OrderView> views = orderDao.getAll();
         views.forEach(System.out::println);
+        sqlSession.close();
     }
 
     @Test
@@ -84,6 +84,7 @@ public class orderDaoTest {
         OrderDao orderDao = sqlSession.getMapper(OrderDao.class);
         List<OrderView> views = orderDao.selectIf(null, 2);
         views.forEach(System.out::println);
+        sqlSession.close();
     }
 
     @Test
@@ -92,6 +93,7 @@ public class orderDaoTest {
         OrderDao orderDao = sqlSession.getMapper(OrderDao.class);
         List<OrderView> views = orderDao.selectIfAndWhere(null, null);
         views.forEach(System.out::println);
+        sqlSession.close();
     }
 
     @Test
@@ -108,6 +110,7 @@ public class orderDaoTest {
         System.out.println(order);
         sqlSession.commit();
         System.out.println(order);
+        sqlSession.close();
     }
 
     @Test
@@ -122,6 +125,7 @@ public class orderDaoTest {
         System.out.println(order);
         sqlSession.commit();
         System.out.println(order);
+        sqlSession.close();
     }
 
 
@@ -132,6 +136,7 @@ public class orderDaoTest {
         OrderDao orderDao = sqlSession.getMapper(OrderDao.class);
         List<OrderView> orderViews = orderDao.getByMoneyForeach(moneys);
         orderViews.forEach(System.out::println);
+        sqlSession.close();
     }
 
     @Test
@@ -144,6 +149,7 @@ public class orderDaoTest {
 
         orderDao.insertByBatch(orders);
         sqlSession.commit();
+        sqlSession.close();
     }
 
     @Test
@@ -157,6 +163,43 @@ public class orderDaoTest {
                 order -> orderDao.insert(order)
         );
         sqlSession.commit();
+        sqlSession.close();
     }
 
+    @Test
+    public void getChooseWhen(){
+        SqlSession sqlSession = sqlSessionFactory.openSession();
+        OrderDao orderDao = sqlSession.getMapper(OrderDao.class);
+        List<OrderView> orderViews = orderDao.getChooseWhen(17.0 , 2);
+        orderViews.forEach(System.out::println);
+        sqlSession.close();
+    }
+
+    //测试一级缓存
+    @Test
+    public void testCache(){
+        SqlSession sqlSession = sqlSessionFactory.openSession();
+        OrderDao orderDao = sqlSession.getMapper(OrderDao.class);
+        System.out.println(orderDao.getById(7));
+        Order order = new Order();
+        order.setMoney(18.0);
+        order.setTime(new Date());
+        orderDao.insertAndTrim(order);
+        System.out.println(orderDao.getById(7));
+        sqlSession.close();
+    }
+
+    //测试二级缓存
+    @Test
+    public void testCache2(){
+        SqlSession sqlSession = sqlSessionFactory.openSession();
+        OrderDao orderDao = sqlSession.getMapper(OrderDao.class);
+        System.out.println(orderDao.getById(7));
+        sqlSession.close();
+
+        SqlSession sqlSession2 = sqlSessionFactory.openSession();
+        OrderDao orderDao2 = sqlSession2.getMapper(OrderDao.class);
+        System.out.println(orderDao2.getById(7));
+        sqlSession2.close();
+    }
 }

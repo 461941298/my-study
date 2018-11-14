@@ -1,4 +1,4 @@
-package com.yjh.study.entity;
+package com.yjh.study.cap13.entity;
 
 import java.io.Serializable;
 import java.util.Date;
