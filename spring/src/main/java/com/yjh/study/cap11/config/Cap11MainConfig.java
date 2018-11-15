@@ -4,7 +4,6 @@ import com.mchange.v2.c3p0.ComboPooledDataSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.EnableAspectJAutoProxy;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import org.springframework.transaction.PlatformTransactionManager;
@@ -16,7 +15,6 @@ import java.beans.PropertyVetoException;
 @Configuration
 @ComponentScan(basePackages = "com.yjh.study.cap11")
 @EnableTransactionManagement
-@EnableAspectJAutoProxy
 public class Cap11MainConfig {
 
     //创建数据源
@@ -30,6 +28,7 @@ public class Cap11MainConfig {
         dataSource.setJdbcUrl("jdbc:mysql://192.168.1.190:3306/test");
         return dataSource;
     }
+
 
     //jdbcTemplate简化数据库操作
     @Bean

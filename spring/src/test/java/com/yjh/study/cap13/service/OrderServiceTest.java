@@ -18,4 +18,12 @@ public class OrderServiceTest {
         Order order = orderService.getById(7);
         System.out.println(order);
     }
+
+    @Test
+    public void insert() {
+        AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(Cap13MainConfig.class);
+        OrderService orderService = context.getBean(OrderService.class);
+
+        orderService.insert();
+    }
 }

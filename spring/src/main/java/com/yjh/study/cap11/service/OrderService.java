@@ -5,8 +5,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.beans.Transient;
-
 @Service
 public class OrderService {
 
@@ -17,6 +15,6 @@ public class OrderService {
     public void insert(){
         orderDao.insert();
 
-//        int a = 1/0;
+        int a = 1/0;
     }
 }
