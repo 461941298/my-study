@@ -1,12 +1,13 @@
 package com.yjh.study.cap13.config;
 
 import com.alibaba.druid.pool.DruidDataSource;
-import org.apache.ibatis.session.SqlSessionFactory;
+import org.apache.ibatis.io.Resources;
 import org.mybatis.spring.SqlSessionFactoryBean;
 import org.mybatis.spring.mapper.MapperScannerConfigurer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.io.InputStreamResource;
 import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
@@ -45,10 +46,12 @@ public class Cap13MainConfig {
 
     //注册SqlSessionFactory
     @Bean
-    public SqlSessionFactory sqlSessionFactoryBean(DataSource dataSource) throws Exception {
+    public SqlSessionFactoryBean sqlSessionFactoryBean(DataSource dataSource) throws Exception {
         SqlSessionFactoryBean sqlSessionFactoryBean = new SqlSessionFactoryBean();
         sqlSessionFactoryBean.setDataSource(dataSource);
-        return sqlSessionFactoryBean.getObject();
+        //这里设置加载mybatis的xml配置
+        sqlSessionFactoryBean.setConfigLocation(new InputStreamResource(Resources.getResourceAsStream("mybatis-config.xml")));
+        return sqlSessionFactoryBean;
     }
 
     //注册要扫描的mapper包

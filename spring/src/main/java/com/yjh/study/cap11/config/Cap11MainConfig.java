@@ -32,14 +32,14 @@ public class Cap11MainConfig {
 
     //jdbcTemplate简化数据库操作
     @Bean
-    public JdbcTemplate jdbcTemplate() throws PropertyVetoException {
-        return new JdbcTemplate(dataSource());
+    public JdbcTemplate jdbcTemplate(DataSource dataSource) throws PropertyVetoException {
+        return new JdbcTemplate(dataSource);
     }
 
     //注册事务管理器
     @Bean
-    public PlatformTransactionManager platformTransactionManager() throws PropertyVetoException {
+    public PlatformTransactionManager platformTransactionManager(DataSource dataSource) throws PropertyVetoException {
         //事务管理器只对当前数据源起作用，所以要加入数据源
-        return new DataSourceTransactionManager(dataSource());
+        return new DataSourceTransactionManager(dataSource);
     }
 }
