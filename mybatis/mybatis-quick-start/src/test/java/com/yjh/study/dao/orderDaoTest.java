@@ -10,8 +10,10 @@ import org.apache.ibatis.session.SqlSessionFactoryBuilder;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.experimental.theories.suppliers.TestedOn;
 
 import java.io.InputStream;
+import java.sql.*;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -33,6 +35,64 @@ public class orderDaoTest {
 
     @After
     public void tearDown() throws Exception {
+    }
+
+    @Test
+    public void jdbc() throws ClassNotFoundException {
+        //1. 注册驱动
+        Class.forName("com.mysql.jdbc.Driver");
+
+        //2. 数据库连接信息
+        String url = "jdbc:mysql://192.168.1.190:3306/test?useUnicode=true&characterEncoding=utf8&allowMultiQueries=true";
+        String username = "yjh";
+        String password = "651028";
+        Connection connection = null;
+        PreparedStatement preparedStatement = null;
+        try {
+
+            //3. 获取链接
+            connection = DriverManager.getConnection(url, username, password);
+            //4. 编写sql
+            String sql = "select * from `order` where id = ?";
+            //5. 创建statement
+            preparedStatement = connection.prepareStatement(sql);
+            //6. 设置条件参数
+            preparedStatement.setInt(1, 1);
+            //7. 执行查询
+            ResultSet resultSet = preparedStatement.executeQuery();
+            //8. 解析查询结果
+            while (resultSet.next()){
+                int id = resultSet.getInt("id");
+                double money = resultSet.getDouble("money");
+                Date createTime = resultSet.getDate("time");
+
+                Order order = new Order();
+                order.setId(id);
+                order.setMoney(money);
+                order.setTime(createTime);
+
+                System.out.println(order);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            if (preparedStatement != null) {
+                try {
+                    preparedStatement.close();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            if (connection != null) {
+                try {
+                    connection.close();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+
     }
 
     @Test
@@ -130,7 +190,7 @@ public class orderDaoTest {
 
 
     @Test
-    public void getByMoneyForeach(){
+    public void getByMoneyForeach() {
         double[] moneys = new double[]{12, 17};
         SqlSession sqlSession = sqlSessionFactory.openSession();
         OrderDao orderDao = sqlSession.getMapper(OrderDao.class);
@@ -140,7 +200,7 @@ public class orderDaoTest {
     }
 
     @Test
-    public void insertByBatch(){
+    public void insertByBatch() {
         double[] moneys = new double[]{12, 17};
         SqlSession sqlSession = sqlSessionFactory.openSession();
         OrderDao orderDao = sqlSession.getMapper(OrderDao.class);
@@ -153,7 +213,7 @@ public class orderDaoTest {
     }
 
     @Test
-    public void insertBatch(){
+    public void insertBatch() {
         double[] moneys = new double[]{12, 17};
         SqlSession sqlSession = sqlSessionFactory.openSession(ExecutorType.BATCH, false);
         OrderDao orderDao = sqlSession.getMapper(OrderDao.class);
@@ -167,17 +227,17 @@ public class orderDaoTest {
     }
 
     @Test
-    public void getChooseWhen(){
+    public void getChooseWhen() {
         SqlSession sqlSession = sqlSessionFactory.openSession();
         OrderDao orderDao = sqlSession.getMapper(OrderDao.class);
-        List<OrderView> orderViews = orderDao.getChooseWhen(17.0 , 2);
+        List<OrderView> orderViews = orderDao.getChooseWhen(17.0, 2);
         orderViews.forEach(System.out::println);
         sqlSession.close();
     }
 
     //测试一级缓存
     @Test
-    public void testCache(){
+    public void testCache() {
         SqlSession sqlSession = sqlSessionFactory.openSession();
         OrderDao orderDao = sqlSession.getMapper(OrderDao.class);
         System.out.println(orderDao.getById(7));
@@ -191,7 +251,7 @@ public class orderDaoTest {
 
     //测试二级缓存
     @Test
-    public void testCache2(){
+    public void testCache2() {
         SqlSession sqlSession = sqlSessionFactory.openSession();
         OrderDao orderDao = sqlSession.getMapper(OrderDao.class);
         System.out.println(orderDao.getById(7));

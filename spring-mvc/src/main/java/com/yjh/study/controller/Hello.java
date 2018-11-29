@@ -4,6 +4,7 @@ import com.yjh.study.service.HelloService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.context.request.async.DeferredResult;
 
@@ -16,6 +17,7 @@ import java.util.concurrent.ConcurrentLinkedDeque;
  * @discrption
  */
 @Controller
+@RequestMapping("/hello")
 public class Hello {
 
     private static final Queue<DeferredResult<String>> QUEUE = new ConcurrentLinkedDeque<>();
@@ -33,6 +35,12 @@ public class Hello {
     @GetMapping("/index")
     public String index() {
         return "index";
+    }
+
+    @GetMapping("/loc")
+    @ResponseBody
+    public String testNgix(){
+        return "loc";
     }
 
 
