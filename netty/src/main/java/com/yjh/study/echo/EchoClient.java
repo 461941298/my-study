@@ -2,49 +2,50 @@ package com.yjh.study.echo;
 
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.ChannelFuture;
+import io.netty.channel.ChannelInitializer;
 import io.netty.channel.EventLoopGroup;
 import io.netty.channel.nio.NioEventLoopGroup;
+import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioSocketChannel;
 
-/**
- * @author yjh
- * @discrption
- */
 public class EchoClient {
 
-    private String host;
-    private Integer port;
+    //服务器端ip
+    private final String host;
+    //服务器端口号
+    private final Integer port;
 
     public EchoClient(String host, Integer port) {
         this.host = host;
         this.port = port;
     }
 
-    public void start() throws InterruptedException {
-        //线程组
+    private void start() throws InterruptedException {
         EventLoopGroup group = new NioEventLoopGroup();
-        try {
-            //客户端启动必备
-            Bootstrap bootstrap = new Bootstrap();
-            bootstrap
-                    .group(group)
-                    //指明使用nio进行网络通信
-                    .channel(NioSocketChannel.class)
-                    //远程服务器地址和端口号
-                    .remoteAddress(host, port)
-                    //ChannelHandler
-                    .handler(new EchoClientHandler());
-            //连接到远程节点，阻塞直到连接完成
-            ChannelFuture future = bootstrap.connect().sync();
-            //阻塞，直到channel关闭
-            future.channel().closeFuture().sync();
 
-        } finally {
+        try {
+            Bootstrap bootstrap = new Bootstrap();
+
+            bootstrap.group(group)
+                    //指定nio通讯
+                    .channel(NioSocketChannel.class)
+                    //指定服务器地址
+                    .remoteAddress(this.host, this.port)
+                    .handler(new ChannelInitializer<SocketChannel>() {
+                        protected void initChannel(SocketChannel ch) throws Exception {
+                            ch.pipeline().addLast(new EchoClientHandler());
+                        }
+                    });
+
+            ChannelFuture channelFuture = bootstrap.connect().sync();
+            channelFuture.channel().closeFuture().sync();
+
+        }finally {
             group.shutdownGracefully().sync();
         }
     }
 
     public static void main(String[] args) throws InterruptedException {
-        new EchoClient("localhost", 8888).start();
+        new EchoClient("localhost", 9090).start();
     }
 }

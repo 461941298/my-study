@@ -6,25 +6,40 @@ import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 import io.netty.util.CharsetUtil;
 
-/**
- * @author yjh
- * @discrption
- */
 public class EchoClientHandler extends SimpleChannelInboundHandler<ByteBuf> {
-
-    //客户端读取到数据后做什么
-    @Override
-    protected void channelRead0(ChannelHandlerContext channelHandlerContext, ByteBuf byteBuf) throws Exception {
-        System.out.println("客户端接收到 " + byteBuf.toString(CharsetUtil.UTF_8));
-    }
-
-
-    //客户端被通知channel激活后做什么
+    /**
+     * 服务器连接建立后调用
+     *
+     * @param ctx
+     * @throws Exception
+     */
     @Override
     public void channelActive(ChannelHandlerContext ctx) throws Exception {
-        ctx.writeAndFlush(Unpooled.copiedBuffer("hello netty", CharsetUtil.UTF_8));
+        //与服务器建立连接后，向其发送数据
+        ctx.writeAndFlush(Unpooled.copiedBuffer("Netty rocks!", CharsetUtil.UTF_8));
     }
 
+
+    /**
+     * 从服务器接收到数据时调用
+     *
+     * @param ctx
+     * @param msg
+     * @throws Exception
+     */
+    @Override
+    protected void channelRead0(ChannelHandlerContext ctx, ByteBuf msg) throws Exception {
+        //打印服务器端发送的信息
+        System.out.println("Client received " + msg.toString(CharsetUtil.UTF_8));
+    }
+
+    /**
+     * 发生异常时调用
+     *
+     * @param ctx
+     * @param cause
+     * @throws Exception
+     */
     @Override
     public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
         cause.printStackTrace();

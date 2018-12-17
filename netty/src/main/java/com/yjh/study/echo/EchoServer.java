@@ -8,48 +8,47 @@ import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
 
-/**
- * @author yjh
- * @discrption
- */
 public class EchoServer {
 
-    private Integer port;
+    private final Integer port;
 
     public EchoServer(Integer port) {
         this.port = port;
     }
 
-    public void start() throws InterruptedException {
-
-        final EchoServerHandler echoServerHandler = new EchoServerHandler();
-        //线程组
+    private void start() throws InterruptedException {
+        //创建 EventLoopGroup
         EventLoopGroup group = new NioEventLoopGroup();
 
         try {
-            //服务端启动必备
+            //服务端引导
             ServerBootstrap bootstrap = new ServerBootstrap();
-            bootstrap
-                    .group(group)
-                    //指明使用nio进行网络通信
+
+            bootstrap.group(group)
+                    //指定使用nio传输
                     .channel(NioServerSocketChannel.class)
-                    //指明监听的端口号
-                    .localAddress(port)
+                    //设置端口
+                    .localAddress(this.port)
+                    //添加 EchoServerHandler 到 Channel 的 ChannelPipeline
                     .childHandler(new ChannelInitializer<SocketChannel>() {
-                        protected void initChannel(SocketChannel socketChannel) throws Exception {
-                            socketChannel.pipeline().addLast(echoServerHandler);
+                        protected void initChannel(SocketChannel ch) throws Exception {
+                            ch.pipeline().addLast(new EchoServerHandler());
                         }
                     });
-            //绑定到端口，阻塞直到接连完成
-            ChannelFuture future = bootstrap.bind().sync();
-            //阻塞，直到channel关闭
-            future.channel().closeFuture().sync();
+
+            //绑定的服务器;sync 等待服务器关闭
+            ChannelFuture channelFuture = bootstrap.bind().sync();
+            System.out.println(EchoServer.class.getName() + " Started and listen on " +
+                    channelFuture.channel().localAddress());
+
+            //关闭 channel 和 块，直到它被关闭
+            channelFuture.channel().closeFuture().sync();
         } finally {
             group.shutdownGracefully().sync();
         }
     }
 
     public static void main(String[] args) throws InterruptedException {
-        new EchoServer(8888).start();
+        new EchoServer(9090).start();
     }
 }
