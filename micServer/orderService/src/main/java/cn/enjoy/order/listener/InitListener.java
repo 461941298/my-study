@@ -1,6 +1,7 @@
 package cn.enjoy.order.listener;
 
 import cn.enjoy.order.utils.LoadBalance;
+import org.I0Itec.zkclient.IZkChildListener;
 import org.I0Itec.zkclient.ZkClient;
 import org.apache.zookeeper.Watcher;
 import org.apache.zookeeper.ZooKeeper;
@@ -26,6 +27,13 @@ public class InitListener implements ServletContextListener {
     public void contextInitialized(ServletContextEvent sce) {
         try {
             zkClient = new ZkClient("192.168.1.190:2181", 5000);
+            //添加监听器,简单粗暴，如果节点内容发生改变则重新加载所有节点信息
+            zkClient.subscribeChildChanges(BASE_SERVICES + SERVICE_NAME, new IZkChildListener() {
+                @Override
+                public void handleChildChange(String s, List<String> list) throws Exception {
+                     updateServiceList();
+                }
+            });
 
             updateServiceList();
         } catch (Exception e) {
