@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:dubbo="http://code.alibabatech.com/schema/dubbo"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+	 http://www.springframework.org/schema/beans/spring-beans.xsd
+	      http://www.springframework.org/schema/context
+                        http://www.springframework.org/schema/context/spring-context-3.1.xsd
+	 http://code.alibabatech.com/schema/dubbo
+	 http://code.alibabatech.com/schema/dubbo/dubbo.xsd">
+
+    <!--提供方信息-->
+    <dubbo:application name="storeService"/>
+    <!--使用zk作为注册中心-->
+    <dubbo:registry address="zookeeper://192.168.1.190:2181"/>
+    <!--声明要暴露的服务接口-->
+    <dubbo:service interface="com.yjh.study.OrderService" ref="orderService" protocol="dubbo">
+        <dubbo:method name="getDetail" cache="lru"/>
+    </dubbo:service>
+    <dubbo:service interface="com.yjh.study.UserService" ref="userService" protocol="dubbo"/>
+    <dubbo:service interface="com.yjh.study.ProductService" ref="productService" protocol="dubbo"/>
+
+    <bean id="orderService" class="com.yjh.study.service.OrderServiceImpl"/>
+    <bean id="userService" class="com.yjh.study.service.UserServiceImpl"/>
+    <bean id="productService" class="com.yjh.study.service.ProductServiceImpl"/>
+</beans>
